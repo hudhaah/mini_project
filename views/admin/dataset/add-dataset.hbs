@@ -1,0 +1,74 @@
+<style>
+    label {
+        margin-bottom: -15px;
+    }
+
+    input {
+        margin-bottom: 10px;
+    }
+
+    .text-danger {
+        margin-top: -5px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<section>
+    <div class="container mt-4">
+        <h4 class="mb-4">Add Data Set</h4>
+        <div class="card p-4 shadow">
+            <form action="/admin/add-dataset" method="post" class="input-container">
+
+                <label for="first name" class=" right-container__label">Name</label>
+                <input type="text" class="form-control right-container__input" name="Name" placeholder="Your Full Name">
+
+                <label for="first name" class=" right-container__label">Type</label>
+                <input type="text" class="form-control right-container__input" name="Type" placeholder="Enter Type">
+
+                <label for="first name" class=" right-container__label">Description</label>
+                <textarea type="text" class="form-control right-container__input" name="Desc"
+                    placeholder="Enter Type"></textarea>
+                <br>
+
+                <button type="submit" class="btn btn-primary mt-2">Create</button>
+                <a href="/admin/all-datasets" class="btn btn-dark mt-2">Back</a>
+
+            </form>
+        </div>
+        <br><br>
+    </div>
+</section>
+
+
+<script>
+    // Get the form element
+    const form = document.getElementById('tutorForm');
+
+    // Handle form submission event
+    form.addEventListener('submit', function (event) {
+        // Prevent default form submission behavior
+        event.preventDefault();
+
+        // Collect form data
+        const tutorName = document.querySelector('input[name="Tutorname"]').value;
+        const email = document.querySelector('input[name="Email"]').value;
+        const phone = document.querySelector('input[name="Phone"]').value;
+        const password = document.querySelector('input[name="Password"]').value;
+
+        // Check if all required fields are filled (simple validation)
+        if (tutorName && email && phone && password) {
+            // First, submit the form via AJAX or manually
+            form.submit(); // This submits the form to the server
+
+            // Now, send the WhatsApp message after form submission
+            const message = `Hi ${tutorName}, your email is ${email} and your password is ${password}. You can log in with these details.`;
+            const encodedMessage = encodeURIComponent(message);
+            const waLink = `https://wa.me/${phone}?text=${encodedMessage}`;
+
+            // Open WhatsApp link
+            window.open(waLink, '_blank');
+        } else {
+            alert('Please fill all the required fields!');
+        }
+    });
+</script>
