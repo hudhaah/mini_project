@@ -13,6 +13,17 @@ var instance = new Razorpay({
 
 module.exports = {
 
+  getAllTips: () => {
+    return new Promise(async (resolve, reject) => {
+      let tips = await db
+        .get()
+        .collection(collections.TIPS_COLLECTION)
+        .find()
+        .toArray();
+      resolve(tips);
+    });
+  },
+
 
   getAllDiets: () => {
     return new Promise(async (resolve, reject) => {
@@ -25,16 +36,16 @@ module.exports = {
     });
   },
 
-  ///////GET ALL workspace/////////////////////     
+  ///////GET ALL diet/////////////////////     
 
-  getAllworkspaces: () => {
+  getAlldiets: () => {
     return new Promise(async (resolve, reject) => {
-      let workspaces = await db
+      let diets = await db
         .get()
-        .collection(collections.WORKSPACE_COLLECTION)
+        .collection(collections.DIET_COLLECTION)
         .find()
         .toArray();
-      resolve(workspaces);
+      resolve(diets);
     });
   },
 
@@ -73,24 +84,24 @@ module.exports = {
     });
   },
 
-  // getAllworkspaces: (expertId) => {
+  // getAlldiets: (expertId) => {
   //   return new Promise(async (resolve, reject) => {
-  //     let workspaces = await db
+  //     let diets = await db
   //       .get()
-  //       .collection(collections.WORKSPACE_COLLECTION)
+  //       .collection(collections.DIET_COLLECTION)
   //       .find({ expertId: objectId(expertId) }) // Filter by expertId
   //       .toArray();
-  //     resolve(workspaces);
+  //     resolve(diets);
   //   });
   // },
 
-  /////// workspace DETAILS/////////////////////                                            
-  getworkspaceDetails: (workspaceId) => {
+  /////// diet DETAILS/////////////////////                                            
+  getdietDetails: (dietId) => {
     return new Promise((resolve, reject) => {
       db.get()
-        .collection(collections.WORKSPACE_COLLECTION)
+        .collection(collections.DIET_COLLECTION)
         .findOne({
-          _id: objectId(workspaceId)
+          _id: objectId(dietId)
         })
         .then((response) => {
           resolve(response);
@@ -238,22 +249,22 @@ module.exports = {
 
 
 
-  getWorkspaceDetails: (workspaceId) => {
+  getDietDetails: (dietId) => {
     return new Promise((resolve, reject) => {
-      if (!ObjectId.isValid(workspaceId)) {
-        reject(new Error('Invalid workspace ID format'));
+      if (!ObjectId.isValid(dietId)) {
+        reject(new Error('Invalid diet ID format'));
         return;
       }
 
       db.get()
-        .collection(collections.WORKSPACE_COLLECTION)
-        .findOne({ _id: ObjectId(workspaceId) })
-        .then((workspace) => {
-          if (!workspace) {
-            reject(new Error('Workspace not found'));
+        .collection(collections.DIET_COLLECTION)
+        .findOne({ _id: ObjectId(dietId) })
+        .then((diet) => {
+          if (!diet) {
+            reject(new Error('Diet not found'));
           } else {
-            // Assuming the workspace has a expertId field
-            resolve(workspace);
+            // Assuming the diet has a expertId field
+            resolve(diet);
           }
         })
         .catch((err) => {
@@ -265,10 +276,10 @@ module.exports = {
 
 
 
-  placeOrder: (order, workspace, total, user) => {
+  placeOrder: (order, diet, total, user) => {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log(order, workspace, total);
+        console.log(order, diet, total);
         let status = order["payment-method"] === "COD" ? "placed" : "pending";
 
         let orderObject = {
@@ -286,11 +297,11 @@ module.exports = {
           userId: objectId(order.userId),
           user: user,
           paymentMethod: order["payment-method"],
-          workspace: workspace,
+          diet: diet,
           totalAmount: total,
           status: status,
           date: new Date(),
-          expertId: workspace.expertId, // Add this line to store the expert's ID
+          expertId: diet.expertId, // Add this line to store the expert's ID
         };
 
         const response = await db.get()
@@ -322,10 +333,10 @@ module.exports = {
     });
   },
 
-  getOrderWorkspaces: (orderId) => {
+  getOrderDiets: (orderId) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let workspaces = await db
+        let diets = await db
           .get()
           .collection(collections.ORDER_COLLECTION)
           .aggregate([
@@ -334,8 +345,8 @@ module.exports = {
             },
             {
               $project: {
-                // Include workspace, user, and other relevant fields
-                workspace: 1,
+                // Include diet, user, and other relevant fields
+                diet: 1,
                 user: 1,
                 paymentMethod: 1,
                 totalAmount: 1,
@@ -348,7 +359,7 @@ module.exports = {
           ])
           .toArray();
 
-        resolve(workspaces[0]); // Fetch the first (and likely only) order matching this ID
+        resolve(diets[0]); // Fetch the first (and likely only) order matching this ID
       } catch (error) {
         reject(error);
       }

@@ -11,12 +11,17 @@
                         <thead class="table-bordered">
                             <tr>
                                 <th>No.</th>
-                                <th>Thumnile</th>
-                                <th>Title</th>
+                                <th>Image</th>
+                                <th>Diet Name</th>
+                                <th>Dataset Name</th>
+                                <th>Age Range</th>
+                                <th>Weight Range</th>
+                                <th>Diet Type</th>
+                                <th>Video Name</th>
                                 <th>Video Link</th>
-
-                                <th>Description</th>
+                                <th>Diet Plan</th>
                                 <th>Manage</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -24,11 +29,15 @@
                             <tr>
                                 <td>{{incremented @index}}</td>
                                 <td><img src="/images/diet-images/{{this._id}}.png" alt="" style="width: 5rem">
-                                </td>
-                                <td>{{this.title}}</td>
+                                <td>{{this.dietname}}</td>
+                                <td>{{this.dname}}</td>
+                                <td>{{this.dage}}</td>
+                                <td>{{this.dweight}}</td>
+                                <td>{{this.dtype}}</td>
+                                <td>{{this.vname}}</td>
+                                <td><a href="{{this.vlink}}" target="_blank">{{this.vlink}}</a></td>
+                                <td>{{this.dietplan}}</td>
 
-                                <td>{{this.link}}</td>
-                                <td>{{this.desc}}</td>
                                 <td>
                                     <div class="d-flex gap-2">
                                         {{!-- <a href="/expert/edit-diet/{{this._id}}" class="btn btn-dark btn-sm"><i

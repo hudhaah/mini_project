@@ -30,6 +30,45 @@ module.exports = {
     });
   },
 
+  getAllcontents: () => {
+    return new Promise(async (resolve, reject) => {
+      let contents = await db
+        .get()
+        .collection(collections.CONTENT_COLLECTION)
+        .find()
+        .toArray();
+      resolve(contents);
+    });
+  },
+
+  getDatasetById: (datasetId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.DATASET_COLLECTION)
+        .findOne({ _id: objectId(datasetId) })
+        .then((dataset) => {
+          resolve(dataset);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  getContentById: (contentId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.CONTENT_COLLECTION)
+        .findOne({ _id: objectId(contentId) })
+        .then((content) => {
+          resolve(content);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
   ///////ADD dataset DETAILS/////////////////////                                            
   getdatasetDetails: (datasetId) => {
     return new Promise((resolve, reject) => {

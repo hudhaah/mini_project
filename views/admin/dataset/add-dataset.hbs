@@ -20,10 +20,52 @@
             <form action="/admin/add-dataset" method="post" class="input-container">
 
                 <label for="first name" class=" right-container__label">Name</label>
-                <input type="text" class="form-control right-container__input" name="Name" placeholder="Your Full Name">
+                <input type="text" class="form-control right-container__input" name="Name" placeholder="Data set name">
 
-                <label for="first name" class=" right-container__label">Type</label>
-                <input type="text" class="form-control right-container__input" name="Type" placeholder="Enter Type">
+                <div class="form-group">
+                    <label class="form-label" for="exampleInputText">Select Age</label>
+                    <select class="form-control" name="age" aria-label="Default select example">
+                        <option selected>Select Age Limit</option>
+                        <option value="10-15">10-15</option>
+                        <option value="15-20">15-20</option>
+                        <option value="20-25">20-25</option>
+                        <option value="25-30">25-30</option>
+                        <option value="30-40">30-40</option>
+                        <option value="40-50">40-50</option>
+                        <option value="50-60">50-60</option>
+                        <option value="Above 60">Above 60</option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="exampleInputText">Select Weight</label>
+                    <select class="form-control" name="weight" aria-label="Default select example">
+                        <option selected>Select Weight Limit</option>
+                        <option value="50-100">50-100</option>
+                        <option value="100-130">100-130</option>
+                        <option value="130-150">130-150</option>
+                        <option value="150-170">150-170</option>
+                        <option value="170-200">170-200</option>
+                        <option value="Above 200">Above 200 </option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="exampleInputText">Select Type</label>
+                    <select class="form-control" name="type" aria-label="Default select example">
+                        <option selected>Select Type</option>
+                        <option value="Below Normal">Below Normal</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Avarage">Avarage</option>
+                        <option value="Above Avarage">Above Avarage</option>
+                        <option value="High">High</option>
+                        <option value="Above High">Above High</option>
+
+                    </select>
+                </div>
+
 
                 <label for="first name" class=" right-container__label">Description</label>
                 <textarea type="text" class="form-control right-container__input" name="Desc"

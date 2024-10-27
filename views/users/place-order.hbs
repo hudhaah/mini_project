@@ -10,10 +10,10 @@
 
                                 <h6 class="mb-3">Enter your billing details</h6>
                                 <input type="text" name="userId" value="{{user._id}}" hidden>
-                                <input type="hidden" name="workspaceId" value="{{workspace._id}}">
+                                <input type="hidden" name="dietId" value="{{diets._id}}">
 
                                 <div class="form-group">
-                                    <input class="form-control mb-3" type="text" name="Fname"
+                                    <input class="form-control mb-3" type="text" s name="Fname"
                                         value={{user.Fname}}{{user.Lname}} placeholder="Your full name">
                                 </div>
                                 <div class="form-group">
@@ -48,36 +48,30 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="card mb-2 p-4">
-                            <h6>Workspace Details</h6>
+                            <h6>Diets Details</h6>
                             <hr>
                             <h6>
-                                <div class="mb-2"><b>Workspace Name :</b> {{workspace.wname}}<br></div>
-                                <div class="mb-2"><b>Price :</b> {{workspace.Price}}/-<br></div>
-                                <div class="mb-2"><b>Provided By :</b> {{workspace.bname}}<br></div>
+                                <div class="mb-2"><b>Diet Name :</b> {{diets.dietname}}<br></div>
+                                <div class="mb-2"><b>Price :</b> {{diets.Price}}/-<br></div>
                                 <hr>
-                                <div class="mb-2"><b>Total Price :</b> <span
-                                        class="text-danger">{{workspace.Price}}</span> /-<br></div>
+                                <div class="mb-2"><b>Total Price :</b> <span class="text-danger">{{diets.Price}}</span>
+                                    /-<br></div>
 
                             </h6>
                         </div>
                         <div class="card p-4">
-                            <label>Select a date</label>
-                            <input type="date" class="form-control" name="selecteddate" id="dateInput" required />
 
-                            {{#if error}}
-                            <div style="color: red;">
-                                <strong>{{error}}</strong>
-                            </div>
-                            {{/if}}
-                            <hr>
-                            <div class="form-check mb-2">
+
+
+                            {{!-- <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="payment-method" value="COD" checked>
                                 <label class="form-check-label" for="darkRadio1">Booking (without payment)</label>
-                            </div>
-                            {{!-- <div class="form-check mb-2">
-                                <input class="form-check-input" type="radio" name="payment-method" value="ONLINE">
-                                <label class="form-check-label" for="darkRadio2">Pay & Book</label>
                             </div> --}}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment-method" value="ONLINE"
+                                    checked>
+                                <label class="form-check-label" for="darkRadio2">Pay & Book</label>
+                            </div>
 
                             <button class="btn btn-dark mt-3 w-100" type="submit">Book Now</button>
             </form>

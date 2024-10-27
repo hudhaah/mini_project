@@ -21,6 +21,13 @@ router.get("/", async function (req, res, next) {
   });
 });
 
+router.get("/tips", async function (req, res, next) {
+  let user = req.session.user;
+  userHelper.getAllTips().then((tips) => {
+    res.render("users/tips", { admin: false, tips, user });
+  });
+});
+
 
 router.get("/about", async function (req, res) {
   res.render("users/about", { admin: false, });
@@ -299,39 +306,39 @@ router.post("/edit-profile/:id", verifySignedIn, async function (req, res) {
 
 
 
-
 router.get('/place-order/:id', verifySignedIn, async (req, res) => {
-  const workspaceId = req.params.id;
+  const dietId = req.params.id;
 
-  // Validate the workspace ID
-  if (!ObjectId.isValid(workspaceId)) {
-    return res.status(400).send('Invalid workspace ID format');
+  // Validate the diet ID
+  if (!ObjectId.isValid(dietId)) {
+    return res.status(400).send('Invalid diet ID format');
   }
 
   let user = req.session.user;
 
   // Fetch the product details by ID
-  let workspace = await userHelper.getWorkspaceDetails(workspaceId);
+  let diets = await userHelper.getdietDetails(dietId);
 
-  // If no workspace is found, handle the error
-  if (!workspace) {
-    return res.status(404).send('Workspace not found');
+  // If no diet is found, handle the error
+  if (!diets) {
+    return res.status(404).send('Diet not found');
   }
 
-  // Render the place-order page with workspace details
-  res.render('users/place-order', { user, workspace });
+  // Render the place-order page with diet details
+  res.render('users/place-order', { user, diets });
 });
 
 router.post('/place-order', async (req, res) => {
   let user = req.session.user;
-  let workspaceId = req.body.workspaceId;
+  let dietId = req.body.dietId;
 
-  // Fetch workspace details
-  let workspace = await userHelper.getWorkspaceDetails(workspaceId);
-  let totalPrice = workspace.Price; // Get the price from the workspace
+
+  // Fetch diet details
+  let diet = await userHelper.getdietDetails(dietId);
+  let totalPrice = diet.Price; // Get the price from the diet
 
   // Call placeOrder function
-  userHelper.placeOrder(req.body, workspace, totalPrice, user)
+  userHelper.placeOrder(req.body, diet, totalPrice, user)
     .then((orderId) => {
       if (req.body["payment-method"] === "COD") {
         res.json({ codSuccess: true });
@@ -378,7 +385,7 @@ router.get("/orders", verifySignedIn, async function (req, res) {
   res.render("users/orders", { admin: false, user, orders });
 });
 
-router.get("/view-ordered-workspaces/:id", verifySignedIn, async function (req, res) {
+router.get("/view-ordered-diets/:id", verifySignedIn, async function (req, res) {
   let user = req.session.user;
   let orderId = req.params.id;
 
@@ -392,14 +399,14 @@ router.get("/view-ordered-workspaces/:id", verifySignedIn, async function (req, 
   }
 
   try {
-    let workspaces = await userHelper.getOrderWorkspaces(orderId);
-    res.render("users/order-workspaces", {
+    let diets = await userHelper.getOrderDiets(orderId);
+    res.render("users/order-diets", {
       admin: false,
       user,
-      workspaces,
+      diets,
     });
   } catch (err) {
-    console.error('Error fetching ordered workspaces:', err);
+    console.error('Error fetching ordered diets:', err);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -412,6 +419,7 @@ router.get("/cancel-order/:id", verifySignedIn, function (req, res) {
     res.redirect("/orders");
   });
 });
+
 
 router.post("/search", verifySignedIn, async function (req, res) {
   let user = req.session.user;

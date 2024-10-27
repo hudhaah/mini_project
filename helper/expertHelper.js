@@ -26,6 +26,25 @@ module.exports = {
       });
   },
 
+  addtips: (tips, expertId, callback) => {
+    if (!expertId || !objectId.isValid(expertId)) {
+      return callback(null, new Error("Invalid or missing expertId"));
+    }
+
+    tips.expertId = objectId(expertId); // Associate tips with the expert
+
+    db.get()
+      .collection(collections.TIPS_COLLECTION)
+      .insertOne(tips)
+      .then((data) => {
+        callback(data.ops[0]._id); // Return the inserted diet ID
+      })
+      .catch((error) => {
+        callback(null, error);
+      });
+  },
+
+
 
   ///////GET ALL diet/////////////////////                                            
   getAlldiets: (expertId) => {

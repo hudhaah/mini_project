@@ -91,7 +91,7 @@
                                 <th scope="col">Name</th>
 
                                 <th scope="col">Full Details</th>
-                                <th scope="col">Workspace Details</th>
+                                <th scope="col">Diet Details</th>
                                 <th scope="col">Payment</th>
                                 <th scope="col">Payment Status</th>
                                 <th scope="col">Status</th>
@@ -121,11 +121,9 @@
                                 </td>
                                 <td>
                                     <ul class="p-0">
-                                        <li><b>Workspace Name : </b>{{this.workspace.wname}}</li>
-                                        <li><b>Selected Date :<br>
-                                            </b> <span class="text-danger">{{this.deliveryDetails.selecteddate}}</span>
-                                        </li>
-                                        {{!-- <li><b>Seat : </b>{{this.workspace.seat}}</li>
+                                        <li><b>Diet Name : </b>{{this.diet.dietname}}</li>
+
+                                        {{!-- <li><b>Seat : </b>{{this.diet.seat}}</li>
                                         <li><b>Pincode : </b>{{this.deliveryDetails.Pincode}}
                                         </li>
                                         <li><b>District : </b>{{this.deliveryDetails.District}}
@@ -151,11 +149,16 @@
                                                     href="/expert/change-status/?status=Rejected&orderId={{this._id}}">Rejected</a>
                                             </li>
 
+                                            <li><a class="dropdown-item"
+                                                    href="/expert/change-status/?status=no use&orderId={{this._id}}">no
+                                                    use</a>
+                                            </li>
+
                                         </ul>
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="deleteWorkspace()"
+                                    <a href="javascript:void(0);" onclick="deleteDiet()"
                                         class="btn btn-danger">Cancel</a>
                                 </td>
 
@@ -183,7 +186,7 @@
 </script>
 
 <script>
-    function deleteWorkspace(id) {
+    function deleteDiet(id) {
         Swal.fire({
             title: `Are you sure you want to delete this order?`,
             text: "This action cannot be undone!",

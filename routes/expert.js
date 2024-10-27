@@ -1,5 +1,7 @@
 var express = require("express");
 var expertHelper = require("../helper/expertHelper");
+var adminHelper = require("../helper/adminHelper");
+
 var fs = require("fs");
 const userHelper = require("../helper/userHelper");
 var router = express.Router();
@@ -21,6 +23,42 @@ router.get("/", verifySignedIn, function (req, res, next) {
   let expert = req.session.expert;
   res.render("expert/home", { expert: true, layout: "layout", expert });
 });
+
+
+///////ADD content/////////////////////                                         
+router.get("/add-tips", verifySignedIn, async function (req, res) {
+  let expert = req.session.expert;
+  expertHelper.getAllOrders(req.session.expert._id).then((orders) => {
+    res.render("expert/add-tips", { admin: true, layout: "layout", expert, orders });
+  })
+});
+
+///////ADD tips/////////////////////                                         
+router.post("/add-tips", async function (req, res) {
+  // Ensure the expert is signed in and their ID is available
+  if (req.session.signedInexpert && req.session.expert && req.session.expert._id) {
+    const expertId = req.session.expert._id; // Get the expert's ID from the session
+
+    // Convert userId in req.body to ObjectId
+    if (req.body.userId) {
+      req.body.userId = ObjectId(req.body.userId);
+    }
+
+    // Pass the expertId to the addtips function
+    expertHelper.addtips(req.body, expertId, (tipsId, error) => {
+      if (error) {
+        console.log("Error adding tips:", error);
+        res.status(500).send("Failed to add tips");
+      } else {
+        res.redirect("/expert");
+      }
+    });
+  } else {
+    // If the expert is not signed in, redirect to the sign-in page
+    res.redirect("/expert/signin");
+  }
+});
+
 
 
 ////////////////////PROFILE////////////////////////////////////
@@ -123,12 +161,44 @@ router.get("/all-diets", verifySignedIn, function (req, res) {
 });
 
 ///////ADD diet/////////////////////                                         
-router.get("/add-diet", verifySignedIn, function (req, res) {
+router.get("/add-diet", verifySignedIn, async function (req, res) {
   let expert = req.session.expert;
-  expertHelper.getAllcontents(req.session.expert._id).then((contents) => {
-    res.render("expert/add-diet", { admin: true, layout: "layout", expert, contents });
-  })
+  let datasets = await adminHelper.getAlldatasets(req.session.expert._id);
+  let contents = await adminHelper.getAllcontents(req.session.expert._id);
+
+  res.render("expert/add-diet", { admin: true, layout: "layout", expert, datasets, contents });
+
 });
+
+
+// Route to get inventory details by ID
+router.get("/get-content/:id", (req, res) => {
+  const contentId = req.params.id;
+
+  adminHelper.getContentById(contentId)
+    .then((content) => {
+      res.json(content); // Send content details as JSON
+    })
+    .catch((error) => {
+      console.error("Error fetching content:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
+});
+
+// Route to get inventory details by ID
+router.get("/get-dataset/:id", (req, res) => {
+  const datasetId = req.params.id;
+
+  adminHelper.getDatasetById(datasetId)
+    .then((dataset) => {
+      res.json(dataset); // Send dataset details as JSON
+    })
+    .catch((error) => {
+      console.error("Error fetching dataset:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
+});
+
 
 ///////ADD diet/////////////////////                                         
 router.post("/add-diet", function (req, res) {

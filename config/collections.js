@@ -9,5 +9,6 @@ module.exports = {
     DATASET_COLLECTION: "dataset",
     CONTENT_COLLECTION: "content",
     DIET_COLLECTION: "diet",
+    TIPS_COLLECTION: "tips"
 
 }
