@@ -14,6 +14,17 @@ var instance = new Razorpay({
 module.exports = {
 
 
+  getAllDiets: () => {
+    return new Promise(async (resolve, reject) => {
+      let diets = await db
+        .get()
+        .collection(collections.DIET_COLLECTION)
+        .find()
+        .toArray();
+      resolve(diets);
+    });
+  },
+
   ///////GET ALL workspace/////////////////////     
 
   getAllworkspaces: () => {
@@ -27,13 +38,35 @@ module.exports = {
     });
   },
 
-  getWorkspaceById: (workspaceId) => {
+  getDietById: async (dietId) => {
+    try {
+      const diet = await db.get()
+        .collection(collections.DIET_COLLECTION)
+        .findOne({ _id: ObjectId(dietId) });
+
+      if (diet) {
+        // Fetch content using the videoId from the diet
+        const content = await db.get()
+          .collection(collections.CONTENT_COLLECTION) // Ensure you replace this with your actual content collection name
+          .findOne({ _id: ObjectId(diet.videoId.$oid) });
+
+        return { diet, content }; // Return both diet and content
+      }
+
+      return null; // In case diet is not found
+    } catch (error) {
+      throw error; // Throw the error for the calling function to handle
+    }
+  },
+
+
+  getContentById: (videoId) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const workspace = await db.get()
-          .collection(collections.WORKSPACE_COLLECTION)
-          .findOne({ _id: ObjectId(workspaceId) });
-        resolve(workspace);
+        const content = await db.get()
+          .collection(collections.CONTENT_COLLECTION) // Replace with your content collection name
+          .findOne({ _id: ObjectId(videoId) }); // Fetch by videoId
+        resolve(content);
       } catch (error) {
         reject(error);
       }

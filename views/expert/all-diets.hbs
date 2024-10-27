@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="w-100" id="dataTable">
-                        <thead>
+                        <thead class="table-bordered">
                             <tr>
                                 <th>No.</th>
                                 <th>Thumnile</th>
@@ -25,7 +25,8 @@
                                 <td>{{incremented @index}}</td>
                                 <td><img src="/images/diet-images/{{this._id}}.png" alt="" style="width: 5rem">
                                 </td>
-                                <td>{{this.name}}</td>
+                                <td>{{this.title}}</td>
+
                                 <td>{{this.link}}</td>
                                 <td>{{this.desc}}</td>
                                 <td>

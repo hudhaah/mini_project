@@ -13,7 +13,6 @@ module.exports = {
       return callback(null, new Error("Invalid or missing expertId"));
     }
 
-    diet.Price = parseInt(diet.Price);
     diet.expertId = objectId(expertId); // Associate diet with the expert
 
     db.get()

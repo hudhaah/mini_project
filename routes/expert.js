@@ -125,7 +125,9 @@ router.get("/all-diets", verifySignedIn, function (req, res) {
 ///////ADD diet/////////////////////                                         
 router.get("/add-diet", verifySignedIn, function (req, res) {
   let expert = req.session.expert;
-  res.render("expert/add-diet", { admin: true, layout: "layout", expert });
+  expertHelper.getAllcontents(req.session.expert._id).then((contents) => {
+    res.render("expert/add-diet", { admin: true, layout: "layout", expert, contents });
+  })
 });
 
 ///////ADD diet/////////////////////                                         
@@ -134,8 +136,11 @@ router.post("/add-diet", function (req, res) {
   if (req.session.signedInexpert && req.session.expert && req.session.expert._id) {
     const expertId = req.session.expert._id; // Get the expert's ID from the session
 
-    // Pass the expertId to the adddiet function
-    expertHelper.adddiet(req.body, expertId, (dietId, error) => {
+    // Convert the video ID from string to ObjectId
+    const videoId = ObjectId(req.body.videoId); // Assuming req.body.videoId contains the ID of the content
+
+    // Pass the expertId and videoId to the adddiet function
+    expertHelper.adddiet({ ...req.body, videoId }, expertId, (dietId, error) => {
       if (error) {
         console.log("Error adding diet:", error);
         res.status(500).send("Failed to add diet");

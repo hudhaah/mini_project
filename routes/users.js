@@ -16,8 +16,8 @@ const verifySignedIn = (req, res, next) => {
 /* GET home page. */
 router.get("/", async function (req, res, next) {
   let user = req.session.user;
-  userHelper.getAllworkspaces().then((workspaces) => {
-    res.render("users/home", { admin: false, workspaces, user });
+  userHelper.getAllDiets().then((diets) => {
+    res.render("users/home", { admin: false, diets, user });
   });
 });
 
@@ -36,15 +36,20 @@ router.get("/service", async function (req, res) {
 })
 
 
-router.get("/single-workspace/:id", async function (req, res) {
+router.get("/single-diet/:id", async function (req, res) {
   let user = req.session.user;
-  const workspaceId = req.params.id; // Get workspace ID from URL
+  const dietId = req.params.id; // Get diet ID from URL
 
   try {
-    const workspace = await userHelper.getWorkspaceById(workspaceId); // Pass the workspace ID to the function
-    res.render("users/single-workspace", { admin: false, user, workspace });
+    const { diet, content } = await userHelper.getDietById(dietId); // Destructure diet and content
+
+    if (diet) {
+      res.render("users/single-diet", { admin: false, user, diet, content }); // Pass both diet and content to the view
+    } else {
+      res.status(404).send("Diet not found");
+    }
   } catch (error) {
-    console.error("Error fetching workspace:", error);
+    console.error("Error fetching diet:", error);
     res.status(500).send("Server Error");
   }
 });
