@@ -71,23 +71,98 @@
             <p class="text-center mb-4">"Find Your Ideal Diet to Elevate Your Work Experience" </p>
             <div class="card mb-4 w-100">
                 <div class="card-body w-100">
-                    <div class="d-flex justify-content-between gap-3 align-items-center">
-                        <div class="form-group mb-0 w-100">
-                            <input class="form-control form-control-clicked" id="dietSearchInput" type="text"
-                                placeholder="Search For Diet...">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class=" form-group mb-3 w-100">
+                                <input class="form-control form-control-clicked" id="dietSearchInput" type="text"
+                                    placeholder="Search For Diet...">
+                            </div>
                         </div>
-                        <div class="form-group mb-0 w-100">
-                            <input class="form-control form-control-clicked" id="weightSearchInput" type="text"
-                                placeholder="Search with weight...">
+                        <div class="col-4">
+                            <div class="form-group mb-3 w-100">
+                                <input class="form-control form-control-clicked" id="weightSearchInput" type="text"
+                                    placeholder="Search with weight...">
+                            </div>
                         </div>
-                        <div class="form-group mb-0 w-100">
-                            <input class="form-control form-control-clicked" id="ageSearchInput" type="number"
-                                placeholder="Search with age...">
+
+                        <div class="col-4">
+                            <div class="form-group mb-3 w-100">
+                                <input class="form-control form-control-clicked" id="ageSearchInput" type="number"
+                                    placeholder="Search with age...">
+                            </div>
                         </div>
+
+                        <div class="col-4">
+
+                            <div class="form-group mb-3">
+                                <select class="form-control" id="bpSearchInput" aria-label="Default select example">
+                                    <option selected>Select Blood Pressure</option>
+                                    <option value="50-100">50-100</option>
+                                    <option value="100-130">100-130</option>
+                                    <option value="130-150">130-150</option>
+                                    <option value="150-170">150-170</option>
+                                    <option value="170-200">170-200</option>
+                                    <option value="Above 200">Above 200 </option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+
+
+                            <div class="form-group mb-3">
+                                <select class="form-control" id="flexibilitySearchInput"
+                                    aria-label="Default select example">
+                                    <option selected>Select Flexibility</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Noraml">Noraml</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+
+                            <div class="form-group mb-3">
+                                <select class="form-control" id="strengthSearchInput"
+                                    aria-label="Default select example">
+                                    <option selected>Select Muscular Strength</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Noraml">Noraml</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+
+
+                            <div class="form-group mb-3">
+                                <select class="form-control" id="compositionSearchInput"
+                                    aria-label="Default select example">
+                                    <option selected>Select Body Composition</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Noraml">Noraml</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+
+
+                            <div class="form-group mb-3">
+                                <select class="form-control" id="heartSearchInput" aria-label="Default select example">
+                                    <option selected>Select Heart Rate</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Noraml">Noraml</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="d-flex gap-2">
                             <button onclick="elementsSearch()" class="btn btn-dark"><i
                                     class="bi bi-search"></i></button>
-                            {{!-- <a href="" class="btn btn-dark"><i class="bi bi-sort-alpha-down"></i></a> --}}
+                            {{!-- <a href="" class="btn btn-dark"><i class="bi bi-sort-alpha-down"></i></a>
+                            --}}
                         </div>
                     </div>
                 </div>
@@ -114,6 +189,15 @@
 
                             <p class="mb-0">For Age : {{this.dage}}</p>
                             <p>For Weight : {{this.dweight}}</p>
+
+                            <div style="display: none;">
+                                {{this.dbp}} <br>
+                                {{this.dflexibility}} <br>
+                                {{this.dstrength}} <br>
+                                {{this.dcomposition}} <br>
+                                {{this.dheart}} <br>
+                            </div>
+
 
 
                             <a href="/single-diet/{{this._id}}" class="btn btn-creative btn-dark btn-sm ct-btn">View
@@ -165,7 +249,14 @@
                 const weight = $('#weightSearchInput').val();
                 const age = $('#ageSearchInput').val();
 
-                $.get(`/api/search?dietName=${dietName}&weight=${weight}&age=${age}`, function (data) {
+                const bp = $('#bpSearchInput').val();
+                const flexibility = $('#flexibilitySearchInput').val();
+                const strength = $('#strengthSearchInput').val();
+                const composition = $('#compositionSearchInput').val();
+                const heart = $('#heartSearchInput').val();
+
+
+                $.get(`/api/search?dietName=${dietName}&weight=${weight}&age=${age}&bp=${bp}&flexibility=${flexibility}&strength=${strength}&composition=${composition}&heart=${heart}`, function (data) {
                     $('#productList').empty();
 
                     if (data.length === 0) {
@@ -192,6 +283,14 @@
 
                         <p class="mb-0">For Age: ${diet.dage}</p>
                         <p>For Weight: ${diet.dweight}</p>
+
+                         <div style="display: none;">
+                                {{this.dbp}} <br>
+                                {{this.dflexibility}} <br>
+                                {{this.dstrength}} <br>
+                                {{this.dcomposition}} <br>
+                                {{this.dheart}} <br>
+                            </div>
 
                         <a href="/single-diet/${diet._id}" class="btn btn-creative btn-dark btn-sm ct-btn">View Details</a>
 

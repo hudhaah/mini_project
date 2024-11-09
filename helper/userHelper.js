@@ -13,6 +13,101 @@ var instance = new Razorpay({
 
 module.exports = {
 
+
+  getAdminById: (adminId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const admin = await db.get()
+          .collection(collections.ADMIN_COLLECTION)
+          .findOne({ _id: objectId(adminId) });
+        resolve(admin);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+
+  getUserById: (userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await db.get()
+          .collection(collections.USERS_COLLECTION)
+          .findOne({ _id: objectId(userId) }); // Find user by their ObjectId
+        resolve(user);
+      } catch (error) {
+        console.error("Error fetching user by ID:", error);
+        reject(error);
+      }
+    });
+  },
+
+  addChat: (chatData, callback) => {
+    db.get()
+      .collection(collections.CHATS_COLLECTION)
+      .insertOne(chatData)
+      .then((data) => {
+        callback(data.insertedId);
+      })
+      .catch((error) => console.error('Error inserting chat message:', error));
+  },
+
+  addChatAdmin: (chatData, callback) => {
+    db.get()
+      .collection(collections.CHATSADMIN_COLLECTION)
+      .insertOne(chatData)
+      .then((data) => {
+        callback(data.insertedId);
+      })
+      .catch((error) => console.error('Error inserting chat message:', error));
+  },
+
+
+  getExpertById: (expertId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const expert = await db.get()
+          .collection(collections.EXPERT_COLLECTION)
+          .findOne({ _id: objectId(expertId) });
+        resolve(expert);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  getChatwithId: (expertId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const messages = await db.get()
+          .collection(collections.CHATS_COLLECTION)
+          .find({ expertId: new objectId(expertId) })
+          .sort({ timestamp: 1 }) // Sort by timestamp in ascending order
+          .toArray();
+
+        resolve(messages);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  getChatwithIdAdmin: (adminId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const messages = await db.get()
+          .collection(collections.CHATS_COLLECTION)
+          .find({ adminId: new objectId(adminId) })
+          .sort({ timestamp: 1 }) // Sort by timestamp in ascending order
+          .toArray();
+
+        resolve(messages);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
   getAllTips: () => {
     return new Promise(async (resolve, reject) => {
       let tips = await db

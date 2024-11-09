@@ -60,6 +60,75 @@ router.post("/add-tips", async function (req, res) {
 });
 
 
+///////ALL reports/////////////////////                                         
+router.get("/all-reports", verifySignedIn, async (req, res) => {
+  const expertId = req.session.expert._id; // Get expertId from session
+  adminHelper.getAllChatsById(expertId).then((chats) => {
+    res.render("expert/all-reports", { expert: true, layout: "layout", chats });
+  }).catch((error) => {
+    console.error("Error fetching chats:", error);
+    res.status(500).send("Internal Server Error");
+  });
+});
+
+// GET route for expert to view chat with a specific user
+router.get("/single-chat/:userId", verifySignedIn, async (req, res) => {
+  const expertId = req.session.expert._id; // Assuming expert's ID is in the session
+  const userId = req.params.userId;
+
+
+  try {
+    // Fetch chat messages based on expertId and userId
+    const chats = await expertHelper.getChatMessagesByExpertAndUser(expertId, userId);
+
+    // Fetch expert and user details
+    const expert = await userHelper.getExpertById(expertId);
+    const user = await userHelper.getUserById(userId);
+
+    // Format chat messages to include user and expert names
+    chats.forEach(chat => {
+      if (chat.sender === 'users') {
+        chat.username = user.Name; // Add the user name if the message is from the user
+      } else if (chat.sender === 'expert') {
+        chat.username = expert.Name; // Add the expert name if the message is from the expert
+      }
+    });
+
+    // Render the chat page with expert, user, and chat data
+    res.render("expert/single-chat", { expert, layout: "empty", user, chats });
+  } catch (error) {
+    console.error("Error fetching expert or chats:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+// POST route for expert to add a reply in the chat
+router.post("/add-chat", async (req, res) => {
+  const expertId = req.session.expert._id;
+  const userId = req.body.userId;
+  const expertName = req.session.expert.Name; // Get the user's first name from session
+
+  const chatData = {
+    expertId: new ObjectId(expertId),
+    userId: new ObjectId(userId),
+    message: req.body.message,
+    sender: expertName, // Indicate who sent the message
+    timestamp: new Date(),
+    isUser: false // Set isUser to true
+
+  };
+
+  try {
+    await expertHelper.addChatMessage(chatData);
+    res.redirect(`/expert/single-chat/${userId}`);
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
 
 ////////////////////PROFILE////////////////////////////////////
 router.get("/profile", async function (req, res, next) {

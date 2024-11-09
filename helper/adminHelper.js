@@ -5,6 +5,107 @@ const objectId = require("mongodb").ObjectID;
 
 module.exports = {
 
+
+  addChatMessage: (chatData) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.CHATS_COLLECTION)
+        .insertOne(chatData)
+        .then((data) => {
+          resolve(data.insertedId);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  getChatMessagesByAdminAndUser: (adminId, userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const chats = await db.get()
+          .collection(collections.CHATS_COLLECTION)
+          .find({
+            $or: [
+              { adminId: objectId(adminId), userId: objectId(userId) },
+              { adminId: objectId(userId), userId: objectId(adminId) }
+            ]
+          })
+          .sort({ timestamp: 1 }) // Sort by timestamp to display messages in order
+          .toArray();
+
+        resolve(chats);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  getAllAdmins: () => {
+    return new Promise(async (resolve, reject) => {
+      let admins = await db
+        .get()
+        .collection(collections.ADMIN_COLLECTION)
+        .find()
+        .toArray();
+      resolve(admins);
+    });
+  },
+
+
+  getAllChatsById: (expertId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const chats = await db
+          .get()
+          .collection(collections.CHATS_COLLECTION)
+          .aggregate([
+            { $match: { expertId: objectId(expertId), isUser: true } }, // Filter by expertId and isUser = true
+            { $sort: { timestamp: -1 } }, // Sort by timestamp to get the latest messages first
+            {
+              $group: {
+                _id: "$userId", // Group by userId to get unique users
+                latestChat: { $first: "$$ROOT" } // Take the first (latest) chat message for each user
+              }
+            },
+            { $replaceRoot: { newRoot: "$latestChat" } } // Replace root with the latest chat document
+          ])
+          .toArray();
+
+        resolve(chats);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+
+  getAllChatsByIdAdmin: (adminId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const chats = await db
+          .get()
+          .collection(collections.CHATS_COLLECTION)
+          .aggregate([
+            { $match: { adminId: objectId(adminId), isUser: true } }, // Filter by adminId and isUser = true
+            { $sort: { timestamp: -1 } }, // Sort by timestamp to get the latest messages first
+            {
+              $group: {
+                _id: "$userId", // Group by userId to get unique users
+                latestChat: { $first: "$$ROOT" } // Take the first (latest) chat message for each user
+              }
+            },
+            { $replaceRoot: { newRoot: "$latestChat" } } // Replace root with the latest chat document
+          ])
+          .toArray();
+
+        resolve(chats);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
   ///////ADD dataset/////////////////////                                         
   adddataset: (dataset, callback) => {
     console.log(dataset);

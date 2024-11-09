@@ -121,6 +121,32 @@
                                             <input type="text" class="form-control mb-3" id="weight" name="dweight"
                                                 readonly>
                                         </div>
+
+                                        <div class="col-lg-4">
+                                            <label for="bp" class="form-label">BP</label>
+                                            <input type="text" class="form-control mb-3" id="bp" name="dbp" readonly>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label for="flexibility" class="form-label">Flexibility</label>
+                                            <input type="text" class="form-control mb-3" id="flexibility"
+                                                name="dflexibility" readonly>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <label for="strength" class="form-label">STRENGTH</label>
+                                            <input type="text" class="form-control mb-3" id="strength" name="dstrength"
+                                                readonly>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label for="composition" class="form-label">Composition</label>
+                                            <input type="text" class="form-control mb-3" id="composition"
+                                                name="dcomposition" readonly>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label for="heart" class="form-label">Heart</label>
+                                            <input type="text" class="form-control mb-3" id="heart" name="dheart"
+                                                readonly>
+                                        </div>
                                     </div>
 
                                     <div class="row">
@@ -252,6 +278,14 @@
                 document.getElementById("age").value = data.age || "N/A";
                 document.getElementById("weight").value = data.weight || "0";
                 document.getElementById("type").value = data.type || "N/A";
+
+                document.getElementById("bp").value = data.bp || "N/A";
+                document.getElementById("flexibility").value = data.flexibility || "N/A";
+                document.getElementById("strength").value = data.strength || "N/A";
+                document.getElementById("composition").value = data.composition || "N/A";
+                document.getElementById("heart").value = data.heart || "N/A";
+
+
                 document.getElementById("desc").value = data.desc || "N/A";
 
                 document.getElementById("datasetDetails").style.display = "block";

@@ -1,5 +1,7 @@
 var express = require("express");
 var userHelper = require("../helper/userHelper");
+var adminHelper = require("../helper/adminHelper");
+
 var router = express.Router();
 var db = require("../config/connection");
 var collections = require("../config/collections");
@@ -13,6 +15,8 @@ const verifySignedIn = (req, res, next) => {
   }
 };
 
+
+
 /* GET home page. */
 router.get("/", async function (req, res, next) {
   let user = req.session.user;
@@ -21,31 +25,31 @@ router.get("/", async function (req, res, next) {
   });
 });
 
-router.get('/api/search', async(req, res) => {
+router.get('/api/search', async (req, res) => {
   const { dietName, weight, age } = req.query;
-  
-  let filteredDiets =await userHelper.getAllDiets()
-  
+
+  let filteredDiets = await userHelper.getAllDiets()
+
   if (dietName) {
-      filteredDiets = filteredDiets.filter(diet => 
-          diet.dietname.toLowerCase().includes(dietName.toLowerCase())
-      );
+    filteredDiets = filteredDiets.filter(diet =>
+      diet.dietname.toLowerCase().includes(dietName.toLowerCase())
+    );
   }
-  
+
   if (weight) {
     filteredDiets = filteredDiets.filter(diet => {
       const [minWeight, maxWeight] = diet.dweight.split('-').map(Number);
       const searchAge = Number(weight);
       return searchAge >= minWeight && searchAge <= maxWeight;
-  });
+    });
   }
-  
+
   if (age) {
-      filteredDiets = filteredDiets.filter(diet => {
-          const [minAge, maxAge] = diet.dage.split('-').map(Number);
-          const searchAge = Number(age);
-          return searchAge >= minAge && searchAge <= maxAge;
-      });
+    filteredDiets = filteredDiets.filter(diet => {
+      const [minAge, maxAge] = diet.dage.split('-').map(Number);
+      const searchAge = Number(age);
+      return searchAge >= minAge && searchAge <= maxAge;
+    });
   }
   res.json(filteredDiets);
 });
@@ -457,6 +461,119 @@ router.post("/search", verifySignedIn, async function (req, res) {
   userHelper.searchProduct(req.body).then((response) => {
     res.render("users/search-result", { admin: false, user, response });
   });
+});
+
+
+///////ALL report/////////////////////                                         
+router.get("/reports", verifySignedIn, async (req, res) => {
+  let experts = await adminHelper.getAllexperts();
+  res.render("users/reports", { admin: false, user: req.session.user, experts, });
+});
+
+
+////////////////////////////
+router.get("/single-chat/:id", verifySignedIn, async function (req, res) {
+  const user = req.session.user;
+  const expertId = req.params.id; // Get expert ID from URL
+
+  try {
+    const chats = await userHelper.getChatwithId(expertId); // Fetch chat messages with expert
+    const expert = await userHelper.getExpertById(expertId);  // Fetch expert details
+
+    res.render("users/single-chat", { admin: false, user, layout: "empty", chats, expert });
+  } catch (error) {
+    console.error("Error fetching expert or chats:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+// Route for adding a chat message
+router.post("/add-chat", async (req, res) => {
+  let user = req.session.user;
+  const expertId = req.body.expertId;
+  const userId = req.session.user._id;
+  const message = req.body.message;
+  const userName = req.session.user.Fname; // Get the user's first name from session
+
+
+  const chatData = {
+    expertId: new ObjectId(expertId),
+    userId: new ObjectId(userId),
+    message: message,
+    sender: userName, // Mark the sender as user
+    timestamp: new Date(),
+    isUser: true // Set isUser to true
+
+  };
+
+  try {
+    // Insert chat data into the database
+    await userHelper.addChat(chatData);
+
+    // Redirect to the chat page with the expertId
+    res.redirect(`/single-chat/${expertId}`);
+  } catch (error) {
+    console.error('Error adding chat message:', error);
+    res.status(500).send('Error sending message');
+  }
+});
+
+
+
+
+////////////////////////////ADMINnnnnnnNNNNNnnnnnNNN
+
+///////ALL report/////////////////////                                         
+router.get("/admin-reports", verifySignedIn, async (req, res) => {
+  let admins = await adminHelper.getAllAdmins();
+  res.render("users/admin-reports", { admin: false, user: req.session.user, admins, });
+});
+
+
+router.get("/single-chat-admin/:id", verifySignedIn, async function (req, res) {
+  const user = req.session.user;
+  const adminId = req.params.id; // Get admin ID from URL
+
+  try {
+    const chats = await userHelper.getChatwithIdAdmin(adminId); // Fetch chat messages with admin
+    const admin = await userHelper.getAdminById(adminId);  // Fetch admin details
+
+    res.render("users/single-chat-admin", { admin: false, user, layout: "empty", chats, admin });
+  } catch (error) {
+    console.error("Error fetching admin or chats:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+// Route for adding a chat message
+router.post("/add-chat-admin", async (req, res) => {
+  let user = req.session.user;
+  const adminId = req.body.adminId;
+  const userId = req.session.user._id;
+  const message = req.body.message;
+  const userName = req.session.user.Fname; // Get the user's first name from session
+
+
+  const chatData = {
+    adminId: new ObjectId(adminId),
+    userId: new ObjectId(userId),
+    message: message,
+    sender: userName, // Mark the sender as user
+    timestamp: new Date(),
+    isUser: true // Set isUser to true
+
+  };
+
+  try {
+    // Insert chat data into the database
+    await userHelper.addChatAdmin(chatData);
+
+    // Redirect to the chat page with the adminId
+    res.redirect(`/single-chat-admin/${adminId}`);
+  } catch (error) {
+    console.error('Error adding chat message:', error);
+    res.status(500).send('Error sending message');
+  }
 });
 
 module.exports = router;

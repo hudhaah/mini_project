@@ -299,7 +299,7 @@ router.get("/delete-all-products", verifySignedIn, function (req, res) {
 router.get("/all-users", verifySignedIn, function (req, res) {
   let administator = req.session.admin;
   adminHelper.getAllUsers().then((users) => {
-    res.render("admin/users/all-users", { admin: true, layout: "admin-layout", administator, users });
+    res.render("admin/all-users", { admin: true, layout: "admin-layout", administator, users });
   });
 });
 
@@ -369,5 +369,75 @@ router.post("/search", verifySignedIn, function (req, res) {
   });
 });
 
+
+///////ALL report/////////////////////                                         
+router.get("/all-reports", verifySignedIn, async (req, res) => {
+  let administator = req.session.admin;
+  const adminId = req.session.admin._id; // Get adminId from session
+  adminHelper.getAllChatsByIdAdmin(adminId).then((chats) => {
+    res.render("admin/all-reports", { admin: true, layout: "admin-layout", administator, chats });
+  }).catch((error) => {
+    console.error("Error fetching chats:", error);
+    res.status(500).send("Internal Server Error");
+  });
+});
+
+
+
+// GET route for admin to view chat with a specific user
+router.get("/single-chat/:userId", verifySignedIn, async (req, res) => {
+  const adminId = req.session.admin._id; // Assuming admin's ID is in the session
+  const userId = req.params.userId;
+
+
+  try {
+    // Fetch chat messages based on adminId and userId
+    const chats = await adminHelper.getChatMessagesByAdminAndUser(adminId, userId);
+
+    // Fetch admin and user details
+    const admin = await userHelper.getAdminById(adminId);
+    const user = await userHelper.getUserById(userId);
+
+    // Format chat messages to include user and admin names
+    chats.forEach(chat => {
+      if (chat.sender === 'users') {
+        chat.username = user.Name; // Add the user name if the message is from the user
+      } else if (chat.sender === 'admin') {
+        chat.username = admin.Name; // Add the admin name if the message is from the admin
+      }
+    });
+
+    // Render the chat page with admin, user, and chat data
+    res.render("admin/single-chat", { admin, layout: "admin-layout", user, chats });
+  } catch (error) {
+    console.error("Error fetching admin or chats:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+// POST route for admin to add a reply in the chat
+router.post("/add-chat", async (req, res) => {
+  const adminId = req.session.admin._id;
+  const userId = req.body.userId;
+  const adminName = req.session.admin.Name; // Get the user's first name from session
+
+  const chatData = {
+    adminId: new ObjectId(adminId),
+    userId: new ObjectId(userId),
+    message: req.body.message,
+    sender: adminName, // Indicate who sent the message
+    timestamp: new Date(),
+    isUser: false // Set isUser to true
+
+  };
+
+  try {
+    await adminHelper.addChatMessage(chatData);
+    res.redirect(`/admin/single-chat/${userId}`);
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).send("Server Error");
+  }
+});
 
 module.exports = router;

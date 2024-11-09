@@ -6,6 +6,56 @@ const objectId = require("mongodb").ObjectID;
 module.exports = {
 
 
+  addChatMessage: (chatData) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.CHATS_COLLECTION)
+        .insertOne(chatData)
+        .then((data) => {
+          resolve(data.insertedId);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // Fetch chat messages based on expertId and userId
+  getChatMessagesByExpertAndUser: (expertId, userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const chats = await db.get()
+          .collection(collections.CHATS_COLLECTION)
+          .find({
+            $or: [
+              { expertId: objectId(expertId), userId: objectId(userId) },
+              { expertId: objectId(userId), userId: objectId(expertId) }
+            ]
+          })
+          .sort({ timestamp: 1 }) // Sort by timestamp to display messages in order
+          .toArray();
+
+        resolve(chats);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+
+
+  getAllreports: () => {
+    return new Promise(async (resolve, reject) => {
+      let reports = await db
+        .get()
+        .collection(collections.CHATS_COLLECTION)
+        .find()
+        .toArray();
+      resolve(reports);
+    });
+  },
+
+
 
   ///////ADD content/////////////////////                                         
   adddiet: (diet, expertId, callback) => {

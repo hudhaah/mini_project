@@ -28,6 +28,22 @@ app.engine(
         index++;
         return index;
       },
+      formatDate: function (dateString) {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`; // Return the formatted date
+      },
+      eq: function (a, b) {
+        return a === b;
+      },
+      formatTime: function (dateString) {
+        const date = new Date(dateString);
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`; // Return the formatted time
+      },
     },
   })
 );

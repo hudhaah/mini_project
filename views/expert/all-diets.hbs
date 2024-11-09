@@ -7,7 +7,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="w-100" id="dataTable">
+                    <table class="w-100" id="">
                         <thead class="table-bordered">
                             <tr>
                                 <th>No.</th>
@@ -16,6 +16,12 @@
                                 <th>Dataset Name</th>
                                 <th>Age Range</th>
                                 <th>Weight Range</th>
+
+                                <th>Bp</th>
+                                <th>flexibility</th>
+                                <th>strength</th>
+                                <th>composition</th>
+                                <th>heart</th>
                                 <th>Diet Type</th>
                                 <th>Video Name</th>
                                 <th>Video Link</th>
@@ -33,9 +39,16 @@
                                 <td>{{this.dname}}</td>
                                 <td>{{this.dage}}</td>
                                 <td>{{this.dweight}}</td>
+
+                                <td>{{this.dbp}}</td>
+                                <td>{{this.dflexibility}}</td>
+                                <td>{{this.dstrength}}</td>
+                                <td>{{this.dcomposition}}</td>
+                                <td>{{this.dheart}}</td>
+
                                 <td>{{this.dtype}}</td>
                                 <td>{{this.vname}}</td>
-                                <td><a href="{{this.vlink}}" target="_blank">{{this.vlink}}</a></td>
+                                <td><a href="{{this.vlink}}" target="_blank">View</a></td>
                                 <td>{{this.dietplan}}</td>
 
                                 <td>

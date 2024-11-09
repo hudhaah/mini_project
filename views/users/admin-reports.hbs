@@ -1,0 +1,94 @@
+<main id="main" class="main">
+
+    <style>
+        .header {
+            --background-color: rgba(0, 0, 0, 0);
+            --default-color: #ffffff;
+            --heading-color: #ffffff;
+            color: var(--default-color);
+            background-color: black;
+            padding: 20px 0;
+            transition: all 0.5s;
+            z-index: 997;
+        }
+    </style>
+    <br><br><br><br><br>
+    <section class="section">
+        <div class="container">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Chat With Admin</h5>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table datatable">
+                            <thead>
+                                <tr>
+                                    <th>Admin Name</th>
+                                    <th>Chat</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each admins}}
+                                <tr>
+
+                                    <td>{{this.Name}}</td>
+                                    <td><a href="/single-chat-admin/{{this._id}}" class="btn btn-dark btn-sm">Chat with
+                                            {{this.Name}}</a></td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<script>
+    async function handleApproval(adminId, adminName, phoneNumber) {
+        // First, send an approval request to the server
+        try {
+            const response = await fetch(`/admin/approve-admin/${adminId}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                // If approval is successful, redirect to WhatsApp with a pre-filled message
+                const message = `Hi ${adminName}, your request has been approved by the admin. You can now log in to your dashboard`;
+                const waLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.location.href = waLink;
+            } else {
+                alert('Error approving the admin.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function handleRejection(adminId, adminName, phoneNumber) {
+        // First, send a rejection request to the server
+        try {
+            const response = await fetch(`/admin/reject-admin/${adminId}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                // If rejection is successful, redirect to WhatsApp with a pre-filled message
+                const message = `Hi ${adminName}, your request has been rejected by the admin. Please contact support for more details.`;
+                const waLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.location.href = waLink;
+            } else {
+                alert('Error rejecting the admin.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+</script>

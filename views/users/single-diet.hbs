@@ -16,22 +16,14 @@
             <div class="col-lg-6">
                 <div class="card product-details-card mb-3 direction-rtl">
                     <div class="card-body">
-                        <h3>{{diet.title}}</h3>
-                        <h5>{{diet.Price}}/-</h5>
-                        <p><b>Location : </b>
-                            {{diet .baddress}}
-                        </p>
-
-                        {{#if content}}
-                        <p>Video ID: {{content.videoId}}</p>
-                        <p>Content Description: {{content.link}}</p>
-                        <!-- Add more content fields as necessary -->
-                        {{else}}
-                        <p>No content available for this diet.</p>
-                        {{/if}}
-
-                        <h5>Description</h5>
+                        <h3>{{diet.dietname}}</h3>
                         <p>{{diet.desc}}</p>
+
+                        <p>Rs.{{diet.Price}}/-</p>
+
+
+
+
 
 
 
@@ -43,8 +35,17 @@
                 </div>
                 <div class="card product-details-card mb-3 direction-rtl">
                     <div class="card-body">
-                        <h5>Amenities</h5>
-                        <p>{{{diet.amenities}}}</p>
+                        <h5>Diet For</h5>
+                        <ul>
+                            <li><b>Age : </b>{{diet.dage}} </li>
+                            <li><b>Weight : </b>{{diet.dweight}} </li>
+                            <li><b>Bp : </b>{{diet.dbp}} </li>
+                            <li><b>Flexibility : </b>{{diet.dflexibility}} </li>
+                            <li><b>Strength : </b>{{diet.dstrength}} </li>
+                            <li><b>Composition : </b>{{diet.dcomposition}} </li>
+                            <li><b>Heart Rate : </b>{{diet.dheart}} </li>
+
+                        </ul>
                     </div>
                 </div>
 
