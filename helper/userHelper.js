@@ -76,12 +76,12 @@ module.exports = {
     });
   },
 
-  getChatwithId: (expertId) => {
+  getChatwithId: (expertId, userId) => {
     return new Promise(async (resolve, reject) => {
       try {
         const messages = await db.get()
           .collection(collections.CHATS_COLLECTION)
-          .find({ expertId: new objectId(expertId) })
+          .find({ expertId: new objectId(expertId), userId: new objectId(userId) }) // Filter by both adminId and userId
           .sort({ timestamp: 1 }) // Sort by timestamp in ascending order
           .toArray();
 
@@ -92,12 +92,13 @@ module.exports = {
     });
   },
 
-  getChatwithIdAdmin: (adminId) => {
+  getChatwithIdAdmin: (adminId, userId) => {
     return new Promise(async (resolve, reject) => {
       try {
         const messages = await db.get()
           .collection(collections.CHATS_COLLECTION)
-          .find({ adminId: new objectId(adminId) })
+          .find({ adminId: new objectId(adminId), userId: new objectId(userId) }) // Filter by both adminId and userId
+
           .sort({ timestamp: 1 }) // Sort by timestamp in ascending order
           .toArray();
 

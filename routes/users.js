@@ -477,7 +477,7 @@ router.get("/single-chat/:id", verifySignedIn, async function (req, res) {
   const expertId = req.params.id; // Get expert ID from URL
 
   try {
-    const chats = await userHelper.getChatwithId(expertId); // Fetch chat messages with expert
+    const chats = await userHelper.getChatwithId(expertId, user._id); // Fetch chat messages with expert
     const expert = await userHelper.getExpertById(expertId);  // Fetch expert details
 
     res.render("users/single-chat", { admin: false, user, layout: "empty", chats, expert });
@@ -535,7 +535,7 @@ router.get("/single-chat-admin/:id", verifySignedIn, async function (req, res) {
   const adminId = req.params.id; // Get admin ID from URL
 
   try {
-    const chats = await userHelper.getChatwithIdAdmin(adminId); // Fetch chat messages with admin
+    const chats = await userHelper.getChatwithIdAdmin(adminId, user._id); // Fetch chat messages with admin
     const admin = await userHelper.getAdminById(adminId);  // Fetch admin details
 
     res.render("users/single-chat-admin", { admin: false, user, layout: "empty", chats, admin });
