@@ -15,7 +15,7 @@
 
 <section>
     <div class="container mt-4">
-        <h4 class="mb-4">Add New Tutor</h4>
+        <h4 class="mb-4">Add New Expert</h4>
         <div class="card p-4 shadow">
             <form id="tutorForm" action="/admin/add-tutor" method="post" class="input-container">
 
@@ -66,7 +66,7 @@
                     type="password" placeholder="Enter Password">
                 {{#if errors.password}}<div class="text-danger">{{errors.password}}</div>{{/if}}
 
-                <button type="submit" class="btn btn-primary mt-2">Create</button>
+                <button type="submit" class="btn btn-primary mt-2">Add</button>
                 <a href="/admin/all-tutors" class="btn btn-dark mt-2">Back</a>
 
             </form>
