@@ -197,7 +197,7 @@
     <!-- Messages List -->
     <div class="messages">
         {{#each chats}}
-        <div class="message {{#if (eq sender 'Admin')}}message-admin{{else}}message-user{{/if}}">
+        <div class="message {{#if (eq sender 'admin')}}message-admin{{else}}message-user{{/if}}">
             <div class="">
                 <span class="username">{{sender}}</span> <!-- Display the username --> <br>
                 <span class="message-time">{{formatTime timestamp}}</span>
